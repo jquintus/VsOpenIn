@@ -87,6 +87,31 @@
   </Commands>
 
 
+  <!--This section is where you can associate a command with a keyboard shortcut; this association is
+  valid within a specific UI context, that is when the shell is inside a specific mode, e.g. during
+  debugging, editing a file or when the user is using a specific designer.-->
+  <KeyBindings>
+    <!--
+    To define a binding, we have to specify the sequence of keys to press to activate the command (keystate).
+    A key binding can use one or two key and optionally up to two modifiers (Alt, Control or Shift keys); the
+    keys are specified using the key1 and key2 attributes (key2 can be omitted) and the modifiers using the
+    mod1 and mod2 attributes (both optional).
+
+    The editor attribute is used to specify the UI context that activates the key binding.
+
+    Notice that Visual Studio has a lot of components and commands, so it can be difficult to find a
+    key binding not used by somebody else; if the key bindings are conflicting only one will be used
+    and one problem is that the shell will not inform the user that a conflict was found. The only
+    way to detect the problem is to start Visual Studio under debugger, try to execute any command
+    and look if there is a message in the output window about a duplicated accelerator found.
+    -->
+
+    <!--
+    In this example we want to use the <Control><1> binding for the first command defined in
+    the Buttons section above, so this is its definition:
+    -->
+    <KeyBinding guid="guidVsOpenInCmdSet" id="cmdidOpenInVim" editor="guidVSStd97" key1="v" mod1="Alt" />
+  </KeyBindings>
 
 
 
@@ -112,5 +137,7 @@
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
   </Symbols>
+
+  
 
 </CommandTable>
