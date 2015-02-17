@@ -3,10 +3,13 @@
   <Metadata>
     <Identity Id="e869a176-ebba-4477-ab62-38f1b3d24c55" Version="1.5" Language="en-US" Publisher="MasterDevs" />
     <DisplayName>VsOpenIn</DisplayName>
-    <Description> Visual Studio extension to open the current document in an external editor.  </Description>
+    <Description xml:space="preserve"> Visual Studio extension to open the current document in an external editor.  The default configuration opens in Vim.</Description>
     <MoreInfo>https://github.com/jquintus/VsOpenIn</MoreInfo>
     <License>Resources\license.txt</License>
     <GettingStartedGuide>https://github.com/jquintus/VsOpenIn</GettingStartedGuide>
+    <Icon>Resources\large_icon.png</Icon>
+    <PreviewImage>Resources\preview_image.png</PreviewImage>
+    <Tags>editor, vi</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Version="[12.0,13.0)" Id="Microsoft.VisualStudio.Premium" />

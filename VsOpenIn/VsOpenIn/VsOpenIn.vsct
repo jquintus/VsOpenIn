@@ -63,7 +63,7 @@
 
       <Button guid="guidVsOpenInCmdSet" id="cmdidOpenInVim" priority="0x0100" type="Button">
         <Parent guid="guidVsOpenInCmdSet" id="MyMenuGroup" />
-        <Icon guid="guidImages" id="bmpPic1" />
+        <Icon guid="guidMenuIcon" id="myIcon" />
         <Strings>
           <ButtonText>Open In Vim</ButtonText>
         </Strings>
@@ -81,7 +81,7 @@
             inside a button definition. An important aspect of this declaration is that the element id 
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
-      
+      <Bitmap guid="guidMenuIcon" href="Resources\small_icon.png" usedList="myIcon"/>
     </Bitmaps>
  
   </Commands>
@@ -126,8 +126,6 @@
       <IDSymbol name="cmdidOpenInVim" value="0x0100" />
     </GuidSymbol>
     
-    
-    
     <GuidSymbol name="guidImages" value="{be798f8d-e11f-441b-b859-59f80b4b7a52}" >
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
@@ -135,6 +133,9 @@
       <IDSymbol name="bmpPicX" value="4" />
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+    <GuidSymbol name="guidMenuIcon" value="{D25E6485-7D6A-4CB0-880B-F2F197ADCD80}" >
+      <IDSymbol name="myIcon" value="1" />
     </GuidSymbol>
   </Symbols>
 
