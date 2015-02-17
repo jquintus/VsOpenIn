@@ -182,6 +182,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\ToolsMenu.png" />
     <None Include="Resources\small_icon.png" />
   </ItemGroup>
   <PropertyGroup>
