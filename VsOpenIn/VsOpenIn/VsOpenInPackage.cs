@@ -77,17 +77,12 @@ namespace MasterDevs.VsOpenIn
 
         private void MenuItemCallback(object sender, EventArgs e)
         {
-
-            // Get an instance of the currently running Visual Studio IDE.
-            EnvDTE80.DTE2 dte2 = (EnvDTE80.DTE2)System.Runtime.InteropServices.Marshal.
-            GetActiveObject("VisualStudio.DTE.12.0");
-
+            var dte2 = Package.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
             var doc = dte2.ActiveDocument;
 
-            var filePath = doc.FullName;
             Process p = new Process();
             p.StartInfo.FileName = _vimPath;
-            p.StartInfo.Arguments = filePath;
+            p.StartInfo.Arguments = string.Format("\"{0}\"", doc.FullName);
             p.Start();
         }
 
