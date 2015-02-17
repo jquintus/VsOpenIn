@@ -13,6 +13,6 @@ To use the extension simply press Alt-V in any code window and your external edi
 ![Tools](https://raw.githubusercontent.com/jquintus/VsOpenIn/master/VsOpenIn/VsOpenIn/Resources/ToolsMenu.png)
 
 ## Configure an Editor
-You can configure it to open up any editor you like from the settings
+The default configuation opens a new instance of [Vim](http://www.vim.org/download.php#pc), but you can configure it to open up any editor you like from the settings
 ![Configure](https://raw.githubusercontent.com/jquintus/VsOpenIn/master/VsOpenIn/VsOpenIn/Resources/preview_image.png)
 
