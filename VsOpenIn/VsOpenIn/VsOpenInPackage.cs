@@ -79,7 +79,7 @@ namespace MasterDevs.VsOpenIn
         {
             OptionDialog options = (OptionDialog)GetDialogPage(typeof(OptionDialog));
 
-            _launcher.Launch(options.OpenPath, options.Arguments, options.InitialDirectory);
+            _launcher.Launch(options.EditorPath, options.Arguments, options.InitialDirectory);
         }
 
     }
