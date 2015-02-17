@@ -73,12 +73,20 @@ namespace MasterDevs.VsOpenIn
             return @"C:\Program Files (x86)\vim\vim74\gvim.exe";
         }
 
+
+
+        private void MenuItemCallback(object sender, EventArgs e)
+        {
+            Process.Start(_vimPath);
+        }
+
+
         /// <summary>
         /// This function is the callback used to execute a command when the a menu item is clicked.
         /// See the Initialize method to see how the menu item is associated to this function using
         /// the OleMenuCommandService service and the MenuCommand class.
         /// </summary>
-        private void MenuItemCallback(object sender, EventArgs e)
+        private void MenuItemCallback_original(object sender, EventArgs e)
         {
             // Show a Message Box to prove we were here
             IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
