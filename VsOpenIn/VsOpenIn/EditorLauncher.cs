@@ -1,28 +1,35 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MasterDevs.VsOpenIn.Utils;
 namespace MasterDevs.VsOpenIn
 {
-    public class VimLauncher
+    public class EditorLauncher
     {
         private int _curLine;
         private int _curCol;
         private FileInfo _path;
-        private string _vimPath = @"C:\Program Files (x86)\vim\vim74\gvim.exe";
         private EnvDTE.Document _currentDoc;
+
+        private readonly string _defaultDirectory;
+
+        public EditorLauncher()
+        {
+            _defaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
 
         private void UpdateFields(EnvDTE.Document doc)
         {
             SetPosition(doc);
             _path = new FileInfo(doc.FullName);
-
         }
-        public void Launch()
+
+        public void Launch(string path, string arguments, string initialDirectory)
         {
             if (CanOpenDocument(_currentDoc))
             {
@@ -30,23 +37,31 @@ namespace MasterDevs.VsOpenIn
                 Process p = new Process();
 
                 p.StartInfo = new ProcessStartInfo();
-                p.StartInfo.FileName = _vimPath;
-                p.StartInfo.Arguments = GetArguments();
-                p.StartInfo.WorkingDirectory = _path.Directory.FullName;
-
+                p.StartInfo.FileName = path;
+                p.StartInfo.Arguments = FormatArguments(arguments);
+                p.StartInfo.WorkingDirectory = FormatArguments(initialDirectory, _defaultDirectory);
                 p.Start();
             }
         }
 
         /// <summary>
-        /// explanation of arguments http://vim.wikia.com/wiki/Integrate_gvim_with_Visual_Studio
         /// </summary>
-        private string GetArguments()
+        private string FormatArguments(string arguments, string defaultValue = "")
         {
-            return string.Format("--servername VimStudio --remote-silent \"+call cursor({0}, {1})\" \"{2}\"",
-                _curLine,
-                _curCol,
-                _path.FullName);
+            if (string.IsNullOrWhiteSpace(arguments))
+            {
+                return defaultValue;
+            }
+            Hashtable mappings = new Hashtable()
+            {
+                {"CurrentLine" , _curLine},
+                {"CurrentCol" , _curCol},
+                {"FullName", _path.FullName},
+                {"FileName", _path.Name},
+                {"DirectoryName", _path.DirectoryName}
+            };
+
+            return arguments.Inject(mappings);
         }
 
         private void SetPosition(dynamic activeDoc)

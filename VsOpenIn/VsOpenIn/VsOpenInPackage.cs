@@ -37,7 +37,7 @@ namespace MasterDevs.VsOpenIn
         /// </summary>
         private EnvDTE.DTE _dte2;
         private MenuCommand _menuItem;
-        private VimLauncher _launcher;
+        private EditorLauncher _launcher;
 
         protected override void Initialize()
         {
@@ -47,7 +47,7 @@ namespace MasterDevs.VsOpenIn
             _dte2 = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
             _dte2.Events.WindowEvents.WindowActivated += new _dispWindowEvents_WindowActivatedEventHandler(WindowEvents_WindowActivated);
 
-            _launcher = new VimLauncher();
+            _launcher = new EditorLauncher();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -77,7 +77,9 @@ namespace MasterDevs.VsOpenIn
 
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            _launcher.Launch();
+            OptionDialog options = (OptionDialog)GetDialogPage(typeof(OptionDialog));
+
+            _launcher.Launch(options.OpenPath, options.Arguments, options.InitialDirectory);
         }
 
     }

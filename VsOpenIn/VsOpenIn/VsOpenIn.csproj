@@ -132,7 +132,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="VimLauncher.cs" />
+    <Compile Include="Utils\StringFormatExtensions.cs" />
+    <Compile Include="EditorLauncher.cs" />
     <Compile Include="VsOpenInPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
