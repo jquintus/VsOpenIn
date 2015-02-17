@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
 
 namespace MasterDevs.VsOpenIn
 {
@@ -73,16 +71,30 @@ namespace MasterDevs.VsOpenIn
             return @"C:\Program Files (x86)\vim\vim74\gvim.exe";
         }
 
-
-
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            var dte2 = Package.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
-            var doc = dte2.ActiveDocument;
+            var dte2 = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
+            dynamic activeDoc = dte2.ActiveDocument;
+
+            int curLine = 0;
+            int curCol = 0;
+            try
+            {
+
+                curLine = activeDoc.Selection.CurrentLine;
+                curCol = activeDoc.Selection.CurrentColumn;
+            }
+            catch
+            {
+                // Swallow the exception.  The worst thing that happens is that the cursor is not in the right place
+            }
+            FileInfo path = new FileInfo(activeDoc.FullName);
 
             Process p = new Process();
             p.StartInfo.FileName = _vimPath;
-            p.StartInfo.Arguments = string.Format("\"{0}\"", doc.FullName);
+            // explanation of arguments http://vim.wikia.com/wiki/Integrate_gvim_with_Visual_Studio
+            p.StartInfo.Arguments = string.Format("--servername VimStudio --remote-silent \"+call cursor({0}, {1})\" \"{2}\"", curLine, curCol, path.FullName);
+            p.StartInfo.WorkingDirectory = path.Directory.FullName;
             p.Start();
         }
 
