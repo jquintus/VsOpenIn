@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using MasterDevs.VsOpenIn.Options;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
@@ -28,7 +29,7 @@ namespace MasterDevs.VsOpenIn
     [Guid(GuidList.guidVsOpenInPkgString)]
     [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.NoSolution)]
     [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
-
+    [ProvideOptionPage(typeof(OptionDialog),    "VS Open In", "General", 0, 0, true)]
     public sealed class VsOpenInPackage : Package
     {
         /// <summary>
