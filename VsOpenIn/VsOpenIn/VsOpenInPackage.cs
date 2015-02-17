@@ -1,10 +1,8 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace MasterDevs.VsOpenIn
@@ -28,100 +26,57 @@ namespace MasterDevs.VsOpenIn
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidVsOpenInPkgString)]
+    [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.NoSolution)]
+    [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
+
     public sealed class VsOpenInPackage : Package
     {
-        private string _vimPath;
-
         /// <summary>
-        /// Default constructor of the package.
-        /// Inside this method you can place any initialization code that does not require 
-        /// any Visual Studio service because at this point the package object is created but 
-        /// not sited yet inside Visual Studio environment. The place to do all the other 
-        /// initialization is the Initialize method.
+        /// https://msdn.microsoft.com/en-us/library/envdte80.dte2.aspx
         /// </summary>
-        public VsOpenInPackage()
-        {
-            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-        }
+        private EnvDTE.DTE _dte2;
+        private MenuCommand _menuItem;
+        private VimLauncher _launcher;
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
         protected override void Initialize()
         {
-            _vimPath = GetVimPath();
-
-            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+            Debug.WriteLine("Initializing VS Open In Vim");
             base.Initialize();
+
+            _dte2 = (EnvDTE.DTE)GetService(typeof(EnvDTE.DTE));
+            _dte2.Events.WindowEvents.WindowActivated += new _dispWindowEvents_WindowActivatedEventHandler(WindowEvents_WindowActivated);
+
+            _launcher = new VimLauncher();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (null != mcs)
             {
-                // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidVsOpenInCmdSet, (int)PkgCmdIDList.cmdidOpenInVim);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
-                mcs.AddCommand(menuItem);
+                _menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+                mcs.AddCommand(_menuItem);
             }
         }
 
-        private string GetVimPath()
+        void WindowEvents_WindowActivated(Window gotFocus, Window lostFocus)
         {
-            return @"C:\Program Files (x86)\vim\vim74\gvim.exe";
+            Debug.WriteLine("New Window Focused:  {0}", gotFocus);
+            try
+            {
+            _launcher.CurrentDocument = _dte2.ActiveDocument;
+            _menuItem.Enabled = _launcher.CanOpenDocument(gotFocus.Document);
+
+            }
+            catch (Exception)
+            {
+                _launcher.CurrentDocument = null;
+                _menuItem.Enabled = false;
+            }
         }
 
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            var dte2 = (EnvDTE80.DTE2)GetService(typeof(EnvDTE.DTE));
-            dynamic activeDoc = dte2.ActiveDocument;
-
-            int curLine = 0;
-            int curCol = 0;
-            try
-            {
-
-                curLine = activeDoc.Selection.CurrentLine;
-                curCol = activeDoc.Selection.CurrentColumn;
-            }
-            catch
-            {
-                // Swallow the exception.  The worst thing that happens is that the cursor is not in the right place
-            }
-            FileInfo path = new FileInfo(activeDoc.FullName);
-
-            Process p = new Process();
-            p.StartInfo.FileName = _vimPath;
-            // explanation of arguments http://vim.wikia.com/wiki/Integrate_gvim_with_Visual_Studio
-            p.StartInfo.Arguments = string.Format("--servername VimStudio --remote-silent \"+call cursor({0}, {1})\" \"{2}\"", curLine, curCol, path.FullName);
-            p.StartInfo.WorkingDirectory = path.Directory.FullName;
-            p.Start();
-        }
-
-
-        /// <summary>
-        /// This function is the callback used to execute a command when the a menu item is clicked.
-        /// See the Initialize method to see how the menu item is associated to this function using
-        /// the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        private void MenuItemCallback_original(object sender, EventArgs e)
-        {
-            // Show a Message Box to prove we were here
-            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-            Guid clsid = Guid.Empty;
-            int result;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
-                       0,
-                       ref clsid,
-                       "VsOpenIn",
-                       string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.ToString()),
-                       string.Empty,
-                       0,
-                       OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
-                       OLEMSGICON.OLEMSGICON_INFO,
-                       0,        // false
-                       out result));
+            _launcher.Launch();
         }
 
     }
