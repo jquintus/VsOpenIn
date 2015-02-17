@@ -54,17 +54,17 @@ namespace MasterDevs.VsOpenIn
         {
             _vimPath = GetVimPath();
 
-            Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if ( null != mcs )
+            if (null != mcs)
             {
                 // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidVsOpenInCmdSet, (int)PkgCmdIDList.cmdidOpenInVim);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
-                mcs.AddCommand( menuItem );
+                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+                mcs.AddCommand(menuItem);
             }
         }
 
@@ -77,7 +77,18 @@ namespace MasterDevs.VsOpenIn
 
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            Process.Start(_vimPath);
+
+            // Get an instance of the currently running Visual Studio IDE.
+            EnvDTE80.DTE2 dte2 = (EnvDTE80.DTE2)System.Runtime.InteropServices.Marshal.
+            GetActiveObject("VisualStudio.DTE.12.0");
+
+            var doc = dte2.ActiveDocument;
+
+            var filePath = doc.FullName;
+            Process p = new Process();
+            p.StartInfo.FileName = _vimPath;
+            p.StartInfo.Arguments = filePath;
+            p.Start();
         }
 
 
