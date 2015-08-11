@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/v47ob0l5c029qm5t/branch/master?svg=true)](https://ci.appveyor.com/project/jquintus/vsopenin/branch/master)
+
 ![logo](https://raw.githubusercontent.com/jquintus/VsOpenIn/master/VsOpenIn/VsOpenIn/Resources/large_icon.png)
 
 
