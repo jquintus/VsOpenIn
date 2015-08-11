@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="e869a176-ebba-4477-ab62-38f1b3d24c55" Version="1.7" Language="en-US" Publisher="MasterDevs" />
+    <Identity Id="e869a176-ebba-4477-ab62-38f1b3d24c55" Version="1.8" Language="en-US" Publisher="MasterDevs" />
     <DisplayName>VsOpenIn</DisplayName>
     <Description xml:space="preserve"> Visual Studio extension to open the current document in an external editor.  The default configuration opens in Vim.</Description>
     <MoreInfo>https://github.com/jquintus/VsOpenIn</MoreInfo>
