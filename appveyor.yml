@@ -38,7 +38,7 @@ artifacts:
 deploy:
 - provider: GitHub
   auth_token:
-    secure: <replace with your encrypted GitHub token>
+    secure: lgX4GxJWzuYLXkho9D//SrnbrvVAhjBP/3X/Jmcg6pXZtToG7E1GwBr7vXGSqNAu
   artifact: 
   prerelease: false
   on:
