@@ -33,7 +33,7 @@ build:
   publish_nuget_symbols: true
   verbosity: minimal
 artifacts:
-- path: 
+- path: '**\VsOpenIn.vsix'
   name: VsOpenIn
 deploy:
 - provider: GitHub
